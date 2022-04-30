@@ -12,8 +12,7 @@ while wait() do
 game:GetService("ReplicatedStorage").EggEvent:FireServer()
 end
 end)
-local FirstLabel = FirstPage.AddLabel("Section 1")
-local FirstButton = FirstPage.AddButton("Esp", function()
+local secondbutton = FirstPage.AddButton("Esp", function()
 local lplr = game.Players.LocalPlayer
 local camera = game:GetService("Workspace").CurrentCamera
 local CurrentCamera = workspace.CurrentCamera
@@ -198,7 +197,7 @@ game.Players.PlayerAdded:Connect(function(v)
     coroutine.wrap(boxesp)()
 end)
 end)
-local FirstToggle = FirstPage.AddToggle("Chams", false, function(Value)
+local Hella = FirstPage.AddButton("Esp", function()
 local dwEntities = game:GetService("Players")
 local dwLocalPlayer = dwEntities.LocalPlayer 
 local dwRunService = game:GetService("RunService")
@@ -326,4 +325,3 @@ dwRunService.Heartbeat:Connect(function()
 
 end)
 end)
-
