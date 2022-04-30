@@ -197,7 +197,7 @@ game.Players.PlayerAdded:Connect(function(v)
     coroutine.wrap(boxesp)()
 end)
 end)
-local Hella = FirstPage.AddButton("Chams", function()
+local Hella = FirstPage.AddButton("Player Chams", function()
 local dwEntities = game:GetService("Players")
 local dwLocalPlayer = dwEntities.LocalPlayer 
 local dwRunService = game:GetService("RunService")
