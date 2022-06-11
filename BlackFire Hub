@@ -1,10 +1,8 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/twink"))()
 
-local Window = Library:CreateWindow("Autofarm")
+local folder = Library:AddPage("Main")
 
-local folder = Window:AddFolder("Main")
-
-local folder2 = Window:AddFolder("Settings")
+local folder2 = Library:AddPage("Settings")
 
 local Players = {};
 for i,v in pairs(game.Players:GetChildren()) do
@@ -214,9 +212,9 @@ folder2:AddButton({text = "Discord", callback = function(value)
     setclipboard("https://discord.gg/FZdxeYc8WC")
 end})
 
-local Window2 = Library:CreateWindow("Extra")
 
-local folder3 = Window2:AddFolder("Skills")
+
+local folder3 = Library:AddPage("Skills")
 
 folder3:AddToggle({text = "Skill 1", callback = function(value)
     getgenv().One = value
@@ -263,7 +261,7 @@ folder3:AddToggle({text = "Skill 5", callback = function(value)
     end;
 end});
 
-local folder4 = Window2:AddFolder("Other Farms")
+local folder4 = Library:AddPage("Other Farms")
 
 folder4:AddToggle({text = "Menos Farm", callback = function(value)
     getgenv().MenosFarm = value
@@ -290,9 +288,9 @@ folder4:AddToggle({text = "Auto Stomp", callback = function(value)
     end;
 end});
 
-local Window3 = Library:CreateWindow("Teleports")
 
-local folder5 = Window3:AddFolder("NPCS")
+
+local folder5 = Library:AddPage("NPCS")
 
 folder5:AddList({text = "NPC", values = NPC, callback = function(value)
     getgenv().NPCTP = value
@@ -309,9 +307,8 @@ pcall(function()
     end);
 end});
 
-local Window4 = Library:CreateWindow("OP")
 
-local folder6 = Window4:AddFolder("Bounty Farm")
+local folder6 = Library:AddPage("Bounty Farm")
 
 folder6:AddToggle({text = "Auto Bounty Quest", callback = function(value) 
     getgenv().bFarm = value
