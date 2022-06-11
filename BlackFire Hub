@@ -1,4 +1,3 @@
-local Library = loadstring(game:HttpGet("ht
 _G.Settings = {
 ['Name'] = 'Blackfire Hub',
 ['Intro'] = true,
