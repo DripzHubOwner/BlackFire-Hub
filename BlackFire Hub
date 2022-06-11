@@ -2,9 +2,9 @@ local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/blood
 
 local MainUI = Library.Load("BlackFire Hub")
 
-local folder = MainUI:AddPage("Main")
+local folder = MainUI.AddPage("Main")
 
-local folder2 = MainUI:AddPage("Settings")
+local folder2 = MainUI.AddPage("Settings")
 
 local Players = {};
 for i,v in pairs(game.Players:GetChildren()) do
@@ -161,20 +161,20 @@ folder:AddToggle({text = "Auto Adjust Mob", callback = function(value)
     end;
 end});
 
-folder:AddList({text = "Mob", values = Mob, callback = function(value)
+folder.AddDropdown({text = "Mob", values = Mob, callback = function(value)
     getgenv().Mob = value
 end});
 
-folder:AddList({text = "Quests", values = Quest, callback = function(value)
+folder.AddDropdown({text = "Quests", values = Quest, callback = function(value)
     getgenv().Quest = value
 end});
 
 
-folder:AddSlider({text = 'Distance', min = 0, max = 10, incrementalMode = true, callback = function(value) 
+folder.AddSlider({text = 'Distance', min = 0, max = 10, incrementalMode = true, callback = function(value) 
     getgenv().DIS = value
 end});
 
-folder2:AddToggle({text = "Auto Eat", callback = function(value) 
+folder2.AddToggle({text = "Auto Eat", callback = function(value) 
     getgenv().Eat = value
     while getgenv().Eat and wait() do
     pcall(function()
@@ -188,7 +188,7 @@ folder2:AddToggle({text = "Auto Eat", callback = function(value)
     end;
 end});
 
-folder2:AddToggle({text = "Auto Equip", callback = function(value) 
+folder2.AddToggle({text = "Auto Equip", callback = function(value) 
     getgenv().Equip = value
 
     while getgenv().Equip and wait(.3) do
@@ -199,7 +199,7 @@ folder2:AddToggle({text = "Auto Equip", callback = function(value)
 end});
 
 
-folder2:AddToggle({text = "Insta TP", callback = function(value) 
+folder2.AddToggle({text = "Insta TP", callback = function(value) 
     getgenv().InstaTP = value
 
     if getgenv().InstaTP then
@@ -210,15 +210,15 @@ folder2:AddToggle({text = "Insta TP", callback = function(value)
     end;
 end})
 
-folder2:AddButton({text = "Discord", callback = function(value) 
+folder2.AddButton({text = "Discord", callback = function(value) 
     setclipboard("https://discord.gg/FZdxeYc8WC")
 end})
 
 
 
-local folder3 = MainUI:AddPage("Skills")
+local folder3 = MainUI.AddPage("Skills")
 
-folder3:AddToggle({text = "Skill 1", callback = function(value)
+folder3.AddToggle({text = "Skill 1", callback = function(value)
     getgenv().One = value
 
     while getgenv().One and wait() do
@@ -227,7 +227,7 @@ folder3:AddToggle({text = "Skill 1", callback = function(value)
     end;
 end});
 
-folder3:AddToggle({text = "Skill 2", callback = function(value)
+folder3.AddToggle({text = "Skill 2", callback = function(value)
     getgenv().Two = value
 
     while getgenv().Two and wait() do
@@ -236,7 +236,7 @@ folder3:AddToggle({text = "Skill 2", callback = function(value)
     end;
 end});
 
-folder3:AddToggle({text = "Skill 3", callback = function(value)
+folder3.AddToggle({text = "Skill 3", callback = function(value)
     getgenv().Three = value
 
     while getgenv().Three and wait() do
@@ -245,7 +245,7 @@ folder3:AddToggle({text = "Skill 3", callback = function(value)
     end;
 end});
 
-folder3:AddToggle({text = "Skill 4", callback = function(value)
+folder3.AddToggle({text = "Skill 4", callback = function(value)
     getgenv().Four = value
 
     while getgenv().Four and wait() do
@@ -254,7 +254,7 @@ folder3:AddToggle({text = "Skill 4", callback = function(value)
     end;
 end});
 
-folder3:AddToggle({text = "Skill 5", callback = function(value)
+folder3.AddToggle({text = "Skill 5", callback = function(value)
     getgenv().Five = value
 
     while getgenv().Five and wait() do
@@ -263,9 +263,9 @@ folder3:AddToggle({text = "Skill 5", callback = function(value)
     end;
 end});
 
-local folder4 = MainUI:AddPage("Other Farms")
+local folder4 = MainUI.AddPage("Other Farms")
 
-folder4:AddToggle({text = "Menos Farm", callback = function(value)
+folder4.AddToggle({text = "Menos Farm", callback = function(value)
     getgenv().MenosFarm = value
 
     while getgenv().MenosFarm and wait() do
@@ -273,15 +273,15 @@ folder4:AddToggle({text = "Menos Farm", callback = function(value)
     end;
 end});
 
-folder4:AddButton({text = "Set Position", callback = function(value) 
+folder4.AddButton({text = "Set Position", callback = function(value) 
     getgenv().MPos = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
 end});
 
-folder4:AddList({text = "Stomp Key", values = {"One","Two","Three","Four","Five"}, callback = function(value)
+folder4.AddDropdown({text = "Stomp Key", values = {"One","Two","Three","Four","Five"}, callback = function(value)
     getgenv().SKey = value
 end})
 
-folder4:AddToggle({text = "Auto Stomp", callback = function(value)
+folder4.AddToggle({text = "Auto Stomp", callback = function(value)
     getgenv().Stomp = value
 
     while getgenv().Stomp and wait() do
@@ -292,14 +292,14 @@ end});
 
 
 
-local folder5 = MainUI:AddPage("NPCS")
+local folder5 = MainUI.AddPage("NPCS")
 
-folder5:AddList({text = "NPC", values = NPC, callback = function(value)
+folder5.AddDropdown({text = "NPC", values = NPC, callback = function(value)
     getgenv().NPCTP = value
 end})
 
 
-folder5:AddButton({text = "Teleport", callback = function(value) 
+folder5.AddButton({text = "Teleport", callback = function(value) 
 pcall(function()
     for i,v in pairs(game:GetService("Workspace").NPCs:GetChildren()) do
         if v.Name == getgenv().NPCTP then
@@ -310,9 +310,9 @@ pcall(function()
 end});
 
 
-local folder6 = MainUI:AddPage("Bounty Farm")
+local folder6 = MainUI.AddPage("Bounty Farm")
 
-folder6:AddToggle({text = "Auto Bounty Quest", callback = function(value) 
+folder6.AddToggle({text = "Auto Bounty Quest", callback = function(value) 
     getgenv().bFarm = value
 
     while getgenv().bFarm and wait(.1) do
@@ -326,7 +326,7 @@ folder6:AddToggle({text = "Auto Bounty Quest", callback = function(value)
     end;
 end});
 
-folder6:AddToggle({text = "Kill Player", callback = function(value) 
+folder6.AddToggle({text = "Kill Player", callback = function(value) 
     getgenv().pFarm = value
 
     while pFarm and wait() do
@@ -341,11 +341,11 @@ folder6:AddToggle({text = "Kill Player", callback = function(value)
     end;
 end});
 
-folder6:AddBox({text = 'Player', callback = function(value) 
+folder6.AddBox({text = 'Player', callback = function(value) 
     getgenv().Player = value
 end});
 
-folder6:AddToggle({text = "Auto Reset", callback = function(value) 
+folder6.AddToggle({text = "Auto Reset", callback = function(value) 
     getgenv().autoReset = value
 
     while getgenv().autoReset and wait(5.5) do
