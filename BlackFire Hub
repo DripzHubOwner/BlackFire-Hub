@@ -1,8 +1,10 @@
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/twink"))()
 
-local folder = Library:AddPage("Main")
+local MainUI = Library.Load("BlackFire Hub")
 
-local folder2 = Library:AddPage("Settings")
+local folder = MainUI:AddPage("Main")
+
+local folder2 = MainUI:AddPage("Settings")
 
 local Players = {};
 for i,v in pairs(game.Players:GetChildren()) do
@@ -214,7 +216,7 @@ end})
 
 
 
-local folder3 = Library:AddPage("Skills")
+local folder3 = MainUI:AddPage("Skills")
 
 folder3:AddToggle({text = "Skill 1", callback = function(value)
     getgenv().One = value
@@ -261,7 +263,7 @@ folder3:AddToggle({text = "Skill 5", callback = function(value)
     end;
 end});
 
-local folder4 = Library:AddPage("Other Farms")
+local folder4 = MainUI:AddPage("Other Farms")
 
 folder4:AddToggle({text = "Menos Farm", callback = function(value)
     getgenv().MenosFarm = value
@@ -290,7 +292,7 @@ end});
 
 
 
-local folder5 = Library:AddPage("NPCS")
+local folder5 = MainUI:AddPage("NPCS")
 
 folder5:AddList({text = "NPC", values = NPC, callback = function(value)
     getgenv().NPCTP = value
@@ -308,7 +310,7 @@ pcall(function()
 end});
 
 
-local folder6 = Library:AddPage("Bounty Farm")
+local folder6 = MainUI:AddPage("Bounty Farm")
 
 folder6:AddToggle({text = "Auto Bounty Quest", callback = function(value) 
     getgenv().bFarm = value
@@ -352,5 +354,3 @@ folder6:AddToggle({text = "Auto Reset", callback = function(value)
         end);
     end;
 end});
-
-Library:Init()
