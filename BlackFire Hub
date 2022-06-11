@@ -1,327 +1,359 @@
-local UILibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/twink"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/twink"))()
 
-local MainUI = UILibrary.Load("BlackFire Hub")
-local FirstPage = MainUI.AddPage("Home")
+local Window = Library:CreateWindow("Autofarm")
 
-local FirstLabel = FirstPage.AddLabel("Section 1")
-local FirstButton = FirstPage.AddButton("Single Farm", function()
-game:GetService("ReplicatedStorage").EggEvent:FireServer()
-end)
-local FirstToggle = FirstPage.AddToggle("Auto Farm", false, function(Value)
-while wait() do
-game:GetService("ReplicatedStorage").EggEvent:FireServer()
-end
-end)
-local secondbutton = FirstPage.AddButton("Esp", function()
-local lplr = game.Players.LocalPlayer
-local camera = game:GetService("Workspace").CurrentCamera
-local CurrentCamera = workspace.CurrentCamera
-local worldToViewportPoint = CurrentCamera.worldToViewportPoint
+local folder = Window:AddFolder("Main")
 
-local HeadOff = Vector3.new(0, 0.5, 0)
-local LegOff = Vector3.new(0,3,0)
+local folder2 = Window:AddFolder("Settings")
 
+local Players = {};
 for i,v in pairs(game.Players:GetChildren()) do
-    local BoxOutline = Drawing.new("Square")
-    BoxOutline.Visible = false
-    BoxOutline.Color = Color3.new(0,0,0)
-    BoxOutline.Thickness = 3
-    BoxOutline.Transparency = 1
-    BoxOutline.Filled = false
+    table.insert(Players,v.Name)
+end;
 
-    local Box = Drawing.new("Square")
-    Box.Visible = false
-    Box.Color = Color3.new(1,1,1)
-    Box.Thickness = 1
-    Box.Transparency = 1
-    Box.Filled = false
+for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
+    v:Disable();
+end;
 
-    local HealthBarOutline = Drawing.new("Square")
-    HealthBarOutline.Thickness = 3
-    HealthBarOutline.Filled = false
-    HealthBarOutline.Color = Color3.new(0,0,0)
-    HealthBarOutline.Transparency = 1
-    HealthBarOutline.Visible = false
-
-    local HealthBar = Drawing.new("Square")
-    HealthBar.Thickness = 1
-    HealthBar.Filled = false
-    HealthBar.Transparency = 1
-    HealthBar.Visible = false
-
-    function boxesp()
-        game:GetService("RunService").RenderStepped:Connect(function()
-            if v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v ~= lplr and v.Character.Humanoid.Health > 0 then
-                local Vector, onScreen = camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
-
-                local RootPart = v.Character.HumanoidRootPart
-                local Head = v.Character.Head
-                local RootPosition, RootVis = worldToViewportPoint(CurrentCamera, RootPart.Position)
-                local HeadPosition = worldToViewportPoint(CurrentCamera, Head.Position + HeadOff)
-                local LegPosition = worldToViewportPoint(CurrentCamera, RootPart.Position - LegOff)
-
-                if onScreen then
-                    BoxOutline.Size = Vector2.new(1000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
-                    BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
-                    BoxOutline.Visible = true
-
-                    Box.Size = Vector2.new(1000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
-                    Box.Position = Vector2.new(RootPosition.X - Box.Size.X / 2, RootPosition.Y - Box.Size.Y / 2)
-                    Box.Visible = true
-
-                    HealthBarOutline.Size = Vector2.new(2, HeadPosition.Y - LegPosition.Y)
-                    HealthBarOutline.Position = BoxOutline.Position - Vector2.new(6,0)
-                    HealthBarOutline.Visible = true
-
-                    HealthBar.Size = Vector2.new(2, (HeadPosition.Y - LegPosition.Y) / (game:GetService("Players")[v.Character.Name].NRPBS["MaxHealth"].Value / math.clamp(game:GetService("Players")[v.Character.Name].NRPBS["Health"].Value, 0, game:GetService("Players")[v.Character.Name].NRPBS:WaitForChild("MaxHealth").Value)))
-                    HealthBar.Position = Vector2.new(Box.Position.X - 6, Box.Position.Y + (1 / HealthBar.Size.Y))
-                    HealthBar.Color = Color3.fromRGB(255 - 255 / (game:GetService("Players")[v.Character.Name].NRPBS["MaxHealth"].Value / game:GetService("Players")[v.Character.Name].NRPBS["Health"].Value), 255 / (game:GetService("Players")[v.Character.Name].NRPBS["MaxHealth"].Value / game:GetService("Players")[v.Character.Name].NRPBS["Health"].Value), 0)
-                    HealthBar.Visible = true
-
-                    if v.TeamColor == lplr.TeamColor then
-                        --- Our Team
-                        BoxOutline.Visible = false
-                        Box.Visible = false
-                        HealthBarOutline.Visible = false
-                        HealthBar.Visible = false
-                    else
-                        ---Enemy Team
-                        BoxOutline.Visible = true
-                        Box.Visible = true
-                        HealthBarOutline.Visible = true
-                        HealthBar.Visible = true
-                    end
-
-                else
-                    BoxOutline.Visible = false
-                    Box.Visible = false
-                    HealthBarOutline.Visible = false
-                    HealthBar.Visible = false
-                end
-            else
-                BoxOutline.Visible = false
-                Box.Visible = false
-                HealthBarOutline.Visible = false
-                HealthBar.Visible = false
-            end
-        end)
-    end
-    coroutine.wrap(boxesp)()
+local plr = game:GetService("Players").LocalPlayer
+local tweenService = game:GetService("TweenService")
+getgenv().speed = 300
+function toTarget(target)
+    local speed = getgenv().speed
+    local info = TweenInfo.new((target.Position - plr.Character.HumanoidRootPart.Position).Magnitude / speed, Enum.EasingStyle.Linear)
+    local _, err = pcall(function()
+        tweenService:Create(plr.Character.HumanoidRootPart, info, {CFrame = target}):Play()
+    end)
+    if err then error("Couldn't create/start tween: ", err) end
 end
+function newIndexHook()
+    local mt = getrawmetatable(game)
+    local oldIndex = mt.__newindex
+    setreadonly(mt, false)
+    mt.__newindex = newcclosure(function(self, i, v)
+        if checkcaller() and self == plr.Character.HumanoidRootPart and i == 'CFrame' then
+            game.Players.LocalPlayer.Character.Humanoid:ChangeState(11)
+            return toTarget(v) 
+        end
+        return oldIndex(self, i, v)
+    end)
 
-game.Players.PlayerAdded:Connect(function(v)
-    local BoxOutline = Drawing.new("Square")
-    BoxOutline.Visible = false
-    BoxOutline.Color = Color3.new(0,0,0)
-    BoxOutline.Thickness = 3
-    BoxOutline.Transparency = 1
-    BoxOutline.Filled = false
-
-    local Box = Drawing.new("Square")
-    Box.Visible = false
-    Box.Color = Color3.new(1,1,1)
-    Box.Thickness = 1
-    Box.Transparency = 1
-    Box.Filled = false
-
-    local HealthBarOutline = Drawing.new("Square")
-    HealthBarOutline.Thickness = 3
-    HealthBarOutline.Filled = false
-    HealthBarOutline.Color = Color3.new(0,0,0)
-    HealthBarOutline.Transparency = 1
-    HealthBarOutline.Visible = false
-
-    local HealthBar = Drawing.new("Square")
-    HealthBar.Thickness = 1
-    HealthBar.Filled = false
-    HealthBar.Transparency = 1
-    HealthBar.Visible = false
-
-    function boxesp()
-        game:GetService("RunService").RenderStepped:Connect(function()
-            if v.Character ~= nil and v.Character:FindFirstChild("Humanoid") ~= nil and v.Character:FindFirstChild("HumanoidRootPart") ~= nil and v ~= lplr and v.Character.Humanoid.Health > 0 then
-                local Vector, onScreen = camera:worldToViewportPoint(v.Character.HumanoidRootPart.Position)
-
-                local RootPart = v.Character.HumanoidRootPart
-                local Head = v.Character.Head
-                local RootPosition, RootVis = worldToViewportPoint(CurrentCamera, RootPart.Position)
-                local HeadPosition = worldToViewportPoint(CurrentCamera, Head.Position + HeadOff)
-                local LegPosition = worldToViewportPoint(CurrentCamera, RootPart.Position - LegOff)
-
-                if onScreen then
-                    BoxOutline.Size = Vector2.new(1000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
-                    BoxOutline.Position = Vector2.new(RootPosition.X - BoxOutline.Size.X / 2, RootPosition.Y - BoxOutline.Size.Y / 2)
-                    BoxOutline.Visible = true
-
-                    Box.Size = Vector2.new(1000 / RootPosition.Z, HeadPosition.Y - LegPosition.Y)
-                    Box.Position = Vector2.new(RootPosition.X - Box.Size.X / 2, RootPosition.Y - Box.Size.Y / 2)
-                    Box.Visible = true
-
-                    HealthBarOutline.Size = Vector2.new(2, HeadPosition.Y - LegPosition.Y)
-                    HealthBarOutline.Position = BoxOutline.Position - Vector2.new(6,0)
-                    HealthBarOutline.Visible = true
-
-                    HealthBar.Size = Vector2.new(2, (HeadPosition.Y - LegPosition.Y) / (game:GetService("Players")[v.Character.Name].NRPBS["MaxHealth"].Value / math.clamp(game:GetService("Players")[v.Character.Name].NRPBS["Health"].Value, 0, game:GetService("Players")[v.Character.Name].NRPBS:WaitForChild("MaxHealth").Value)))
-                    HealthBar.Position = Vector2.new(Box.Position.X - 6, Box.Position.Y + (1/HealthBar.Size.Y))
-		    HealthBar.Color = Color3.fromRGB(255 - 255 / (game:GetService("Players")[v.Character.Name].NRPBS["MaxHealth"].Value / game:GetService("Players")[v.Character.Name].NRPBS["Health"].Value), 255 / (game:GetService("Players")[v.Character.Name].NRPBS["MaxHealth"].Value / game:GetService("Players")[v.Character.Name].NRPBS["Health"].Value), 0)                    
-		    HealthBar.Visible = true
-
-                    if v.TeamColor == lplr.TeamColor then
-                        --- Our Team
-                        BoxOutline.Visible = false
-                        Box.Visible = false
-                        HealthBarOutline.Visible = false
-                        HealthBar.Visible = false
-                    else
-                        ---Enemy Team
-                        BoxOutline.Visible = true
-                        Box.Visible = true
-                        HealthBarOutline.Visible = true
-                        HealthBar.Visible = true
-                    end
-
-                else
-                    BoxOutline.Visible = true
-                    Box.Visible = true
-                    HealthBarOutline.Visible = true
-                    HealthBar.Visible = true
-                end
-            else
-                BoxOutline.Visible = true
-                Box.Visible = true
-                HealthBarOutline.Visible = true
-                HealthBar.Visible = true
-            end
-        end)
-    end
-    coroutine.wrap(boxesp)()
-end)
-end)
-local thirdButton = FirstPage.AddButton("Player Chams", function()
-local dwEntities = game:GetService("Players")
-local dwLocalPlayer = dwEntities.LocalPlayer 
-local dwRunService = game:GetService("RunService")
-
-local settings_tbl = {
-    ESP_Enabled = true,
-    ESP_TeamCheck = false,
-    Chams = true,
-    Chams_Color = Color3.fromRGB(0,0,255),
-    Chams_Transparency = 0.1,
-    Chams_Glow_Color = Color3.fromRGB(255,0,0)
-}
-
-function destroy_chams(char)
-
-    for k,v in next, char:GetChildren() do 
-
-        if v:IsA("BasePart") and v.Transparency ~= 1 then
-
-            if v:FindFirstChild("Glow") and 
-            v:FindFirstChild("Chams") then
-
-                v.Glow:Destroy()
-                v.Chams:Destroy() 
-
-            end 
-
-        end 
-
-    end 
-
+    setreadonly(mt, true)
 end
+newIndexHook()
 
-dwRunService.Heartbeat:Connect(function()
+game:GetService("RunService").Stepped:Connect(function()
+if getgenv().Autofarm or getgenv().SP or getgenv().MenosFarm then
+    for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if v:IsA("BasePart") and v.CanCollide == true then
+                 v.CanCollide = false
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+            end;
+        end;
+    end;
+end);
 
-    if settings_tbl.ESP_Enabled then
+local Mob = {};
+getgenv().DIS = 6
+for i,v in pairs(game:GetService("Workspace").Living:GetChildren()) do
+if not table.find(Mob,v.Name) and not v:FindFirstChild("ClientHandler") and not v:FindFirstChild("xSIXxAnimationSaves") and not string.match(v.Name,"Masta") and v.Name ~= "Noob" then --//I'm so sorry you had to witness this i apolgize whoever sees this...
+        table.sort(Mob) table.insert(Mob,v.name)
+    end;
+end;
 
-        for k,v in next, dwEntities:GetPlayers() do 
+local Quest = {};
+for i,v in pairs(game:GetService("Workspace").NPCs:GetDescendants()) do
+pcall(function()
+if v.Name == ("Quest") and not v.Parent:FindFirstChild("xSIXxAnimationSaves") then
+    if v.Value ~= "" and v.Value ~= "Test Quest" then
+                table.sort(Quest) table.insert(Quest,v.Value)
+            end;
+        end;
+    end);
+end;
 
-            if v ~= dwLocalPlayer then
+local NPC = {};
+for i,v in pairs(game:GetService("Workspace").NPCs:GetChildren()) do
+if v:IsA("Model") and not v:FindFirstChild("xSIXxAnimationSaves") then
+        table.sort(NPC) table.insert(NPC,v.Name)
+    end;
+end;
 
-                if v.Character and
-                v.Character:FindFirstChild("HumanoidRootPart") and 
-                v.Character:FindFirstChild("Humanoid") and 
-                v.Character:FindFirstChild("Humanoid").Health ~= 0 then
+for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
+    v:Disable();
+end;
 
-                    if settings_tbl.ESP_TeamCheck == false then
-
-                        local char = v.Character 
-
-                        for k,b in next, char:GetChildren() do 
-
-                            if b:IsA("BasePart") and 
-                            b.Transparency ~= 1 then
-                                
-                                if settings_tbl.Chams then
-
-                                    if not b:FindFirstChild("Glow") and
-                                    not b:FindFirstChild("Chams") then
-
-                                        local chams_box = Instance.new("BoxHandleAdornment", b)
-                                        chams_box.Name = "Chams"
-                                        chams_box.AlwaysOnTop = true 
-                                        chams_box.ZIndex = 4 
-                                        chams_box.Adornee = b 
-                                        chams_box.Color3 = settings_tbl.Chams_Color
-                                        chams_box.Transparency = settings_tbl.Chams_Transparency
-                                        chams_box.Size = b.Size + Vector3.new(0.02, 0.02, 0.02)
-
-                                        local glow_box = Instance.new("BoxHandleAdornment", b)
-                                        glow_box.Name = "Glow"
-                                        glow_box.AlwaysOnTop = false 
-                                        glow_box.ZIndex = 3 
-                                        glow_box.Adornee = b 
-                                        glow_box.Color3 = settings_tbl.Chams_Glow_Color
-                                        glow_box.Size = chams_box.Size + Vector3.new(0.13, 0.13, 0.13)
-
-                                    end
-
-                                else
-
-                                    destroy_chams(char)
-
-                                end
-                            
-                            end
-
+folder:AddToggle({text = "Autofarm", callback = function(value) 
+    getgenv().Autofarm = value
+    
+    while getgenv().Autofarm and wait() do
+    pcall(function()
+        for i,v in pairs(game:GetService("Workspace").Living:GetChildren()) do
+            if game.Players.LocalPlayer.Character and v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") then
+                if v.Name == getgenv().Mob and v.Humanoid.Health > 0 then
+                    repeat wait() 
+                        local args = {[1] = {["inputType"] = Enum.UserInputType.MouseButton1,["keyCode"] = Enum.KeyCode.Unknown}}
+                        game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(args))
+                        if not game:GetService("Workspace").Food:FindFirstChildWhichIsA("Part") or not game:GetService("Workspace").Food:FindFirstChildWhichIsA("MeshPart") and getgenv().AutoEat then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame - Vector3.new(0,getgenv().DIS,0)
+                        elseif not getgenv().Eat then
+                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame - Vector3.new(0,getgenv().DIS,0)
                         end
+                        until v.Humanoid.Health <= 0 or not getgenv().Autofarm
+                    end;
+                end;
+            end;
+        end);
+    end;
+end});
 
-                    else
+folder:AddToggle({text = "Auto Quest", callback = function(value) 
+ getgenv().AutoQuest = value
 
-                        if v.Team == dwLocalPlayer.Team then
-                            destroy_chams(v.Character)
-                        end
+while getgenv().AutoQuest and wait() do
+pcall(function()
+for i,v in pairs(game:GetService("Workspace").NPCs:GetChildren()) do
+    if game:GetService("Players").LocalPlayer.PlayerGui.HUD:FindFirstChild("QuestsFrame2") then
+        if not game:GetService("Players").LocalPlayer.PlayerGui.HUD.QuestsFrame2:FindFirstChild(getgenv().Quest) then wait(2)
+                        game:GetService("ReplicatedStorage").Remotes.TakeQuest:FireServer(getgenv().Quest)
+                    end;
+                end;
+            end;
+        end);
+    end;
+end});
 
-                    end
+folder:AddToggle({text = "Auto Adjust Mob", callback = function(value) 
+    if getgenv().Quest == "Op Killer" and value then
+        getgenv().OPK = true
+        getgenv().AQ = false
+    elseif getgenv().Quest == "Acquired Taste" and value then
+        getgenv().AQ = true
+        getgenv().OPK = false
+    end;
+    
+    while getgenv().AQ and wait() do    
+    pcall(function()
+    local wtf = game:GetService("Players").LocalPlayer.PlayerGui.HUD.QuestsFrame2["Acquired Taste"].Frame.Objective
+    
+    if string.match(wtf.Text,"Kill 1 Clawed") or string.match(wtf.Text,"Kill 2 Clawed") then
+            getgenv().Mob = "Clawed Hollow"
+        elseif string.match(wtf.Text,"Kill 1 Winged") or string.match(wtf.Text,"Kill 2 Winged") and string.match(wtf.Text,"Kill 0 Clawed") then
+            getgenv().Mob = "Winged Hollow"
+        elseif string.match(wtf.Text,"Kill 1 Savage") and string.match(wtf.Text,"Kill 0 Clawed") and string.match(wtf.Text,"Kill 0 Winged") then
+                getgenv().Mob = "Savage Hollow"
+            end;
+        end);
+    end;
+    
+    while getgenv().OPK and wait() do
+    pcall(function()
+    local wtf2 = game:GetService("Players").LocalPlayer.PlayerGui.HUD.QuestsFrame2["Op Killer"].Frame.Objective
 
-                else
+        if string.match(wtf2.Text,"Kill 1 Heavy") or string.match(wtf2.Text,"Kill 2 Heavy") then
+                getgenv().Mob = "Heavy Corrupted Kido Corps"
+            elseif string.match(wtf2.Text,"Kill 1 Experienced") and string.match(wtf2.Text,"Kill 0 Heavy") then
+                getgenv().Mob = "Experienced Corrupted Shikai User"
+            elseif string.match(wtf2.Text,"Kill 3 Corrupted") or string.match(wtf2.Text,"Kill 2 Corrupted") or string.match(wtf2.Text,"Kill 1 Corrupted") and string.match(wtf2.Text,"Kill 0 Experienced") then
+                getgenv().Mob = "Corrupted Kido Corps"
+            end;
+        end); 
+    end;
+end});
 
-                    destroy_chams(v.Character)
+folder:AddList({text = "Mob", values = Mob, callback = function(value)
+    getgenv().Mob = value
+end});
 
-                end
+folder:AddList({text = "Quests", values = Quest, callback = function(value)
+    getgenv().Quest = value
+end});
 
-            end
 
-        end
+folder:AddSlider({text = 'Distance', min = 0, max = 10, incrementalMode = true, callback = function(value) 
+    getgenv().DIS = value
+end});
 
-    else 
+folder2:AddToggle({text = "Auto Eat", callback = function(value) 
+    getgenv().Eat = value
+    while getgenv().Eat and wait() do
+    pcall(function()
+        for i, v in pairs(game:GetService("Workspace").Food:GetDescendants()) do
+                if v:FindFirstChild("ProximityPrompt") then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.CFrame - Vector3.new(0,-5,0)
+                    fireproximityprompt(v.ProximityPrompt)
+                end;
+            end;
+        end);
+    end;
+end});
 
-        for k,v in next, dwEntities:GetPlayers() do 
+folder2:AddToggle({text = "Auto Equip", callback = function(value) 
+    getgenv().Equip = value
 
-            if v ~= dwLocalPlayer and 
-            v.Character and 
-            v.Character:FindFirstChild("HumanoidRootPart") and 
-            v.Character:FindFirstChild("Humanoid") and 
-            v.Character:FindFirstChild("Humanoid").Health ~= 0 then
-                
-                destroy_chams(v.Character)
+    while getgenv().Equip and wait(.3) do
+        if game:GetService("Players").LocalPlayer.Status.Weapon.Value == nil then
+            local a={[1]={["inputType"]=Enum.UserInputType.Keyboard,["keyCode"]=Enum.KeyCode.E}}game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(a))
+        end;
+    end;
+end});
 
-            end
 
-        end
+folder2:AddToggle({text = "Insta TP", callback = function(value) 
+    getgenv().InstaTP = value
 
-    end
+    if getgenv().InstaTP then
+        getgenv().speed = 9e9
+        game.Players.LocalPlayer.Name = "123imnotmomo"
+    else
+        getgenv().speed = 300
+    end;
+end})
 
-end)
-end)
+folder2:AddButton({text = "Discord", callback = function(value) 
+    setclipboard("https://discord.gg/FZdxeYc8WC")
+end})
+
+local Window2 = Library:CreateWindow("Extra")
+
+local folder3 = Window2:AddFolder("Skills")
+
+folder3:AddToggle({text = "Skill 1", callback = function(value)
+    getgenv().One = value
+
+    while getgenv().One and wait() do
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "One", false, game); wait(1)
+        local a={[1]={["inputType"]=Enum.UserInputType.MouseButton1,["keyCode"]=Enum.KeyCode.Unknown}}game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(a))
+    end;
+end});
+
+folder3:AddToggle({text = "Skill 2", callback = function(value)
+    getgenv().Two = value
+
+    while getgenv().Two and wait() do
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "Two", false, game); wait(1)
+        local a={[1]={["inputType"]=Enum.UserInputType.MouseButton1,["keyCode"]=Enum.KeyCode.Unknown}}game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(a))
+    end;
+end});
+
+folder3:AddToggle({text = "Skill 3", callback = function(value)
+    getgenv().Three = value
+
+    while getgenv().Three and wait() do
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "Three", false, game); wait(1)
+        local a={[1]={["inputType"]=Enum.UserInputType.MouseButton1,["keyCode"]=Enum.KeyCode.Unknown}}game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(a))
+    end;
+end});
+
+folder3:AddToggle({text = "Skill 4", callback = function(value)
+    getgenv().Four = value
+
+    while getgenv().Four and wait() do
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "Four", false, game); wait(1)
+        local a={[1]={["inputType"]=Enum.UserInputType.MouseButton1,["keyCode"]=Enum.KeyCode.Unknown}}game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(a))
+    end;
+end});
+
+folder3:AddToggle({text = "Skill 5", callback = function(value)
+    getgenv().Five = value
+
+    while getgenv().Five and wait() do
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, "Five", false, game); wait(1)
+        local a={[1]={["inputType"]=Enum.UserInputType.MouseButton1,["keyCode"]=Enum.KeyCode.Unknown}}game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(a))
+    end;
+end});
+
+local folder4 = Window2:AddFolder("Other Farms")
+
+folder4:AddToggle({text = "Menos Farm", callback = function(value)
+    getgenv().MenosFarm = value
+
+    while getgenv().MenosFarm and wait() do
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = (getgenv().MPos)
+    end;
+end});
+
+folder4:AddButton({text = "Set Position", callback = function(value) 
+    getgenv().MPos = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+end});
+
+folder4:AddList({text = "Stomp Key", values = {"One","Two","Three","Four","Five"}, callback = function(value)
+    getgenv().SKey = value
+end})
+
+folder4:AddToggle({text = "Auto Stomp", callback = function(value)
+    getgenv().Stomp = value
+
+    while getgenv().Stomp and wait() do
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, getgenv().SKey, false, game); wait(1)
+        local a={[1]={["inputType"]=Enum.UserInputType.MouseButton1,["keyCode"]=Enum.KeyCode.Unknown}}game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(a))
+    end;
+end});
+
+local Window3 = Library:CreateWindow("Teleports")
+
+local folder5 = Window3:AddFolder("NPCS")
+
+folder5:AddList({text = "NPC", values = NPC, callback = function(value)
+    getgenv().NPCTP = value
+end})
+
+
+folder5:AddButton({text = "Teleport", callback = function(value) 
+pcall(function()
+    for i,v in pairs(game:GetService("Workspace").NPCs:GetChildren()) do
+        if v.Name == getgenv().NPCTP then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame
+            end;
+        end;
+    end);
+end});
+
+local Window4 = Library:CreateWindow("OP")
+
+local folder6 = Window4:AddFolder("Bounty Farm")
+
+folder6:AddToggle({text = "Auto Bounty Quest", callback = function(value) 
+    getgenv().bFarm = value
+
+    while getgenv().bFarm and wait(.1) do
+    pcall(function()
+        if not game:GetService("Players").LocalPlayer.PlayerGui.HUD.QuestsFrame2:FindFirstChild("Bounty") then
+            game:GetService("ReplicatedStorage").Remotes.Bounty:InvokeServer() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(68.866889953613, 3.4504423141479, 1300.1274414062) end;
+        if not game:GetService("Players").LocalPlayer.PlayerGui.HUD.QuestsFrame2.Bounty.Frame.Objective.Text:match(getgenv().Player) then
+            game:GetService("ReplicatedStorage").Remotes.Bounty:InvokeServer() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(68.866889953613, 3.4504423141479, 1300.1274414062)
+            end;
+        end);
+    end;
+end});
+
+folder6:AddToggle({text = "Kill Player", callback = function(value) 
+    getgenv().pFarm = value
+
+    while pFarm and wait() do
+        pcall(function()
+            for i,v in pairs(game.Players:GetChildren()) do
+                if v.Name == getgenv().Player and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.Character.HumanoidRootPart.CFrame + (v.Character.HumanoidRootPart.CFrame.lookVector * -3)
+                    local args = {[1] = {["inputType"] = Enum.UserInputType.MouseButton1,["keyCode"] = Enum.KeyCode.Unknown}} game:GetService("ReplicatedStorage").Remotes.Input:FireServer(unpack(args))
+                end;
+            end;    
+        end);
+    end;
+end});
+
+folder6:AddBox({text = 'Player', callback = function(value) 
+    getgenv().Player = value
+end});
+
+folder6:AddToggle({text = "Auto Reset", callback = function(value) 
+    getgenv().autoReset = value
+
+    while getgenv().autoReset and wait(5.5) do
+    pcall(function()
+            game.Players.LocalPlayer.Character.Head:Destroy()
+        end);
+    end;
+end});
+
+Library:Init()
