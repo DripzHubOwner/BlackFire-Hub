@@ -83,7 +83,7 @@ for i, v in next, getconnections(game.Players.LocalPlayer.Idled) do
     v:Disable();
 end;
 
-folder:AddToggle({text = "Autofarm", callback = function(value) 
+folder.AddToggle({text = "Autofarm", callback = function(value) 
     getgenv().Autofarm = value
     
     while getgenv().Autofarm and wait() do
@@ -123,7 +123,7 @@ for i,v in pairs(game:GetService("Workspace").NPCs:GetChildren()) do
     end;
 end});
 
-folder:AddToggle({text = "Auto Adjust Mob", callback = function(value) 
+folder.AddToggle({text = "Auto Adjust Mob", callback = function(value) 
     if getgenv().Quest == "Op Killer" and value then
         getgenv().OPK = true
         getgenv().AQ = false
