@@ -1,6 +1,6 @@
 _G.Settings = {
 ['Name'] = 'Blackfire Hub',
-['Intro'] = true,
+['Intro'] = false,
 ['Keybind'] = 'G'
 }
 
